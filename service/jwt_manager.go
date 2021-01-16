@@ -16,9 +16,10 @@ type JWTManager struct {
 //UserClaims is a custom JWT claims that contains some user information
 type UserClaims struct {
 	jwt.StandardClaims
-	User string `json:"username"`
-	Role string `json:"role"`
-	DB   string `json:"db"`
+	User      string `json:"username"`
+	Role      string `json:"role"`
+	DB        string `json:"db"`
+	Direction string `json:"direction"`
 }
 
 func NewJWTManager(secretKey string, tokenDuration time.Duration) *JWTManager {

@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"log"
-	"os"
 	"time"
 
 	"github.com/Mau-MR/authzService/pb"
@@ -32,8 +31,9 @@ type accountDB struct {
 	DB       primitive.ObjectID `bson:"db"`
 }
 
+//TODO: Find a way to hide the database name with env and change it later
 func NewAuthDB(db *DB) *AuthDB {
-	userCollection := db.client.Database(os.Getenv("USER_DB")).Collection("user")
+	userCollection := db.client.Database("logdb").Collection("user")
 	return &AuthDB{db, userCollection}
 }
 
@@ -44,7 +44,7 @@ func (auth *AuthDB) checkAccount(user string) error {
 	//TODO:check if it is truly necesary to decode on this part
 	account := accountDB{}
 	if err := auth.userCollection.FindOne(ctx, bson.D{{Key: "user", Value: user}}).Decode(&account); err != nil {
-		return logError(status.Errorf(codes.Internal, "user not found: %v", err))
+		return logError(status.Errorf(codes.Internal, "user not found: :c"))
 	}
 	return nil
 }
