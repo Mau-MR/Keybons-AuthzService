@@ -32,8 +32,7 @@ func (interceptor *AuthInterceptor) Unary() grpc.UnaryServerInterceptor {
 		if info.FullMethod == "/pb.AuthService/Login" || info.FullMethod == "/pb.AuthService/AccountExistance" {
 			return handler(ctx, req)
 		}
-		authorize(ctx)
-		res, err := interceptor.redirectUnitary(*claims, ctx, info.FullMethod, req)
+		res, err := interceptor.redirectUnitary(claims, ctx, info.FullMethod, req)
 		if err != nil {
 			return nil, err
 		}
@@ -85,7 +84,7 @@ func (interceptor *AuthInterceptor) authorize(ctx context.Context, method string
 
 //TODO: Change the conn to be created and pass one to the authInterceptor object from packege connections
 //This is the method that is going to check the header to redirect to specific microservice
-func (interceptor *AuthInterceptor) redirectUnitary(claims UserClaims, ctx context.Context, method string, req interface{}, opts ...grpc.CallOption) (interface{}, error) {
+func (interceptor *AuthInterceptor) redirectUnitary(claims *UserClaims, ctx context.Context, method string, req interface{}, opts ...grpc.CallOption) (interface{}, error) {
 	//TODO: Change the direction of the localhost to use envoy proxy
 	//TODO: Change the grpc connection to use HTTPS
 	conn, err := grpc.Dial(":7777", grpc.WithInsecure())
@@ -104,8 +103,8 @@ func (interceptor *AuthInterceptor) redirectUnitary(claims UserClaims, ctx conte
 	}
 	return res, nil
 }
-func (interceptor *AuthInterceptor) redirectStream(claim UserClaims) error {
-	return nil
-}
 
-//func (interceptor *AuthInterceptor) universalRPCCaller(ctx context.Context, route string)
+//
+func (interceptor *AuthInterceptor) redirectStream(claim UserClaims) (*interface{}, error) {
+	return nil, logError(status.Error(codes.Unimplemented, "This methods has not been implement"))
+}

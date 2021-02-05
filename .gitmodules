@@ -1,0 +1,3 @@
+[submodule "Keybons-ServiceDefinition"]
+	path = Keybons-ServiceDefinition
+	url = https://github.com/Mau-MR/Keybons-ServiceDefinition.git

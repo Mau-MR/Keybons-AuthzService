@@ -1,0 +1,30 @@
+version: '3.1'
+services:
+  gateproxy:
+    image: gateproxy:dev1.0.0
+    build:
+      context: /home/mawi/gocode/src/github.com/Mau-MR/authzService
+      dockerfile: docker/envoy/Dockerfile
+    container_name: gateproxy
+    volumes:
+      - ./envoy/envoy.yaml:/etc/envoy.yaml
+    ports:
+      - "8080:8080"
+      - "9901:9901"
+    networks:
+      - gatemesh
+  server:
+    image: auth:dev1.0.0
+    build:
+      context: /home/mawi/gocode/src/github.com/Mau-MR/authzService
+      dockerfile: docker/server/Dockerfile
+    container_name: authzServer
+    ports:
+      - "9090:9090"
+    networks:
+      gatemesh:
+        aliases:
+          - server
+
+networks:
+  gatemesh: {}
